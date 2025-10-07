@@ -1,0 +1,161 @@
+#!/usr/bin/env bash
+# Mahendra Mali - curl-friendly terminal portfolio
+# Serve this file as raw content. Output is safe text+ANSI only.
+
+# --- Settings & helpers ---
+ESC=$(printf '\033')
+# color helpers (fallback to empty if tput not available)
+if command -v tput >/dev/null 2>&1; then
+  BOLD="$(tput bold)"
+  DIM="$(tput dim)"
+  RESET="$(tput sgr0)"
+  RED="$(tput setaf 1)"
+  GREEN="$(tput setaf 2)"
+  YELLOW="$(tput setaf 3)"
+  BLUE="$(tput setaf 4)"
+  CYAN="$(tput setaf 6)"
+else
+  BOLD="" DIM="" RESET="" RED="" GREEN="" YELLOW="" BLUE="" CYAN=""
+fi
+
+cols=80
+if [ -n "${COLUMNS:-}" ]; then cols=$COLUMNS; fi
+if command -v tput >/dev/null 2>&1; then
+  cols=$(tput cols 2>/dev/null || echo "$cols")
+fi
+
+center() {
+  local text="$1"
+  local len=${#text}
+  if [ "$len" -ge "$cols" ]; then printf "%s\n" "$text"; return; fi
+  local pad=$(( (cols - len) / 2 ))
+  printf "%*s%s\n" "$pad" "" "$text"
+}
+
+hr() {
+  printf '%*s\n' "$cols" '' | tr ' ' '─'
+}
+
+wrap() {
+  local width=$((cols - 4))
+  printf '%s\n' "$1" | fold -s -w "$width" | sed 's/^/  /'
+}
+
+# --- Content (edit here) ---
+PHOTO_URL="https://avatars.githubusercontent.com/u/57547869?v=4"
+NAME="Mahendra Mali"
+TITLE="Tech Architect | IoT & Cybersecurity Specialist | Full-Stack Developer"
+EMAIL="mahendrakumargahelot@gmail.com"
+PHONE="+91 98245 84454"
+LOC="Banaskantha, Gujarat, India"
+
+ABOUT="Passionate about cybersecurity, IoT, and web development. Creates reliable, secure systems integrating hardware, firmware, and APIs for real-world applications."
+
+PROJECTS=(
+"AI Home Automation IoT"
+"Alcohol Detection System Microcontroller"
+"Angryviewer Tool"
+"B4Bomber Android"
+"Fwifi Pentesting"
+"GitHub Repo Image Generator CLI"
+"Go Port Proxy Server Go"
+"Maxfit Android"
+"MaxQemu Linux"
+"MAXTER Shell"
+"Red-byte Pentesting"
+"UltrasonicDistanceMonitor Electronics"
+"wifi-rssi-intrusion-guard IoT"
+"WiFi-Wobble Pentesting"
+"WordPress-Pentest-Utils Pentesting"
+)
+
+EXPERIENCE="Web Developer — RDSDE Gujarat, Ministry of Skill Development & Entrepreneurship (2019-2020)
+* Developed and maintained responsive websites for RDSDE Gujarat.
+* Digitized workflows and integrated dynamic content management features."
+
+EDUCATION="MCA | Sankalchand Patel University, Visnagar (2024–2026) 77.30% (ongoing)
+BCA | HNGU Patan (2021–2024) 75%
+HSC (Science) | GSEB (2019–2020) 51.69%
+SSC | GSEB (2017–2018) 73.33%"
+
+SKILLS="ESP32, Arduino, MicroPython, C++, Python, Java, Go, HTML/CSS/JS, Networking, Server Management, WiFi-Security, OpenWrt, BLE, IoT, Android Studio, Pentesting, Linux"
+
+CERTS="Ethical Hacker Certified, Google Ads Certified, IoT Security, INSEF Regional Fair, Techfest, ICON Amalthea"
+
+ACHIEVEMENTS="IoT-based MaxOS pentesting OS on ESP32
+Batteryless wireless car featured by DD News
+Energy-efficient IoT devices with long battery life"
+
+EXTRA="Nickname: Max | Languages: Gujarati, Rajasthani, Hindi, English
+Hobbies: Ethical Hacking, Coding Challenges, Tech Gadgets, DIY Electronics"
+
+GITHUB="https://github.com/mahendraplus"
+SITE="https://mahendraplus.github.io/"
+
+# --- Render ---
+clear 2>/dev/null || true
+printf "\n"
+center "${BOLD}${CYAN}${NAME}${RESET}"
+center "${DIM}${TITLE}${RESET}"
+printf "\n"
+hr
+printf "\n"
+
+# contact block
+printf "%s\n" "${BOLD}${YELLOW}Contact${RESET}"
+printf "  Email: %s\n" "$EMAIL"
+printf "  Phone: %s\n" "$PHONE"
+printf "  Location: %s\n" "$LOC"
+printf "  Photo: %s\n" "$PHOTO_URL"
+printf "\n"
+
+# About
+printf "%s\n" "${BOLD}${GREEN}About${RESET}"
+wrap "$ABOUT"
+printf "\n"
+
+# Projects (compact)
+printf "%s\n" "${BOLD}${BLUE}Key Projects${RESET}"
+i=1
+for p in "${PROJECTS[@]}"; do
+  printf "  %2d. %s\n" "$i" "$p"
+  i=$((i+1))
+done
+printf "\n"
+
+# Experience
+printf "%s\n" "${BOLD}${YELLOW}Experience Highlights${RESET}"
+wrap "$EXPERIENCE"
+printf "\n"
+
+# Education
+printf "%s\n" "${BOLD}Education${RESET}"
+wrap "$EDUCATION"
+printf "\n"
+
+# Skills & Certs
+printf "%s\n" "${BOLD}Core Skills${RESET}"
+wrap "$SKILLS"
+printf "\n"
+printf "%s\n" "${BOLD}Certifications${RESET}"
+wrap "$CERTS"
+printf "\n"
+
+# Achievements & Extra
+printf "%s\n" "${BOLD}Achievements${RESET}"
+wrap "$ACHIEVEMENTS"
+printf "\n"
+printf "%s\n" "${BOLD}Additional${RESET}"
+wrap "$EXTRA"
+printf "\n"
+
+hr
+printf "\n"
+center "${BOLD}GitHub:${RESET} ${GITHUB}"
+center "${BOLD}Website:${RESET} ${SITE}"
+printf "\n"
+
+# minimal friendly footer
+printf "%s\n" "${DIM}Rendered for terminal output. To host: place this file as raw content and point URL to it.${RESET}"
+printf "\n"
+exit 0
